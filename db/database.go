@@ -43,6 +43,8 @@ func (db *InMemoryDB) GetAllTransactionsOfType(txnType string) ([]int64, error) 
     return txnIDs, nil
 }
 
+// TC: O(n), SC: O(n)
+// BFS to compute sum
 func (db *InMemoryDB) GetSum(txnID int64) (float64, error) {
     queue := list.New()
     queue.PushBack(txnID)
