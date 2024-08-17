@@ -1,10 +1,12 @@
 package main
 
 import (
-    "github.com/gin-gonic/gin"
+	"LOCO_ASSIGNMENT/controllers"
 	_ "LOCO_ASSIGNMENT/docs"
+
+	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
-    ginSwagger "github.com/swaggo/gin-swagger"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // @title           Transaction Service API
@@ -30,13 +32,13 @@ func main() {
 
     r := gin.Default()
 
-	// v1 := r.Group("/api/v1")
-	// {
-	// 	txnService := v1.Group("/transactionservice")
-	// 	{
-			
-	// 	}
-	// }
+	v1 := r.Group("/api/v1")
+	{
+		txnService := v1.Group("/transactionservice")
+		{
+			txnService.PUT("/transaction/:transaction_id", controllers.CreateTransaction)
+		}
+	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(":8080")
