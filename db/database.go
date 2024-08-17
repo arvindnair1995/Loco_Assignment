@@ -3,6 +3,7 @@ package database
 import (
 	"LOCO_ASSIGNMENT/models"
 	"LOCO_ASSIGNMENT/utils"
+	"container/list"
 	"errors"
 )
 
@@ -35,9 +36,32 @@ func (db *InMemoryDB) GetByID(txnID int64) (models.Transaction, error) {
 }
 
 func (db *InMemoryDB) GetAllTransactionsOfType(txnType string) ([]int64, error) {
-    txnIDs, exists := db.typeMap[utils.TransformString(txnType)]
+    txnIDs, exists := db.typeMap[txnType]
     if !exists {
         return nil, errors.New("transaction type not found")
     }
     return txnIDs, nil
+}
+
+func (db *InMemoryDB) GetSum(txnID int64) (float64, error) {
+    queue := list.New()
+    queue.PushBack(txnID)
+
+    sum := 0.0
+
+    for queue.Len() > 0 {
+        element := queue.Front()
+        current := element.Value.(int64)
+        queue.Remove(element)
+
+        sum += db.store[current].Amount
+
+        neighbors, exists := db.graph[current]
+        if exists {
+            for _, neighbor := range neighbors {
+                queue.PushBack(neighbor)
+            }
+        }
+    }
+    return sum, nil
 }

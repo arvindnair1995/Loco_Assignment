@@ -26,6 +26,35 @@ info:
   title: Transaction Service API
   version: "1.0"
 paths:
+  /sum/{transaction_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get sum of transaction by ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: transaction_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: number
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get sum of transaction
+      tags:
+      - transactions
   /transaction/{transaction_id}:
     get:
       consumes:
@@ -45,7 +74,7 @@ paths:
           schema:
             $ref: '#/definitions/models.Transaction'
         "500":
-          description: '{"error": "Transaction not found"}'
+          description: Internal Server Error
           schema:
             additionalProperties:
               type: string
@@ -73,13 +102,13 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"status": "ok"}'
+          description: OK
           schema:
             additionalProperties:
               type: string
             type: object
         "500":
-          description: '{"error": "Invalid input"}'
+          description: Internal Server Error
           schema:
             additionalProperties:
               type: string
@@ -108,7 +137,7 @@ paths:
               type: integer
             type: array
         "500":
-          description: '{"error": "Transaction type not found"}'
+          description: Internal Server Error
           schema:
             additionalProperties:
               type: string

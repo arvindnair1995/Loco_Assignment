@@ -16,10 +16,10 @@ import (
 // @Tags transactions
 // @Accept json
 // @Produce json
-// @Param transaction_id path int true "Transaction ID"
+// @Param transaction_id path int64 true "Transaction ID"
 // @Param txn body models.Transaction true "Transaction Data"
-// @Success 200 {object} map[string]string "{"status": "ok"}"
-// @Failure 500 {object} map[string]string "{"error": "Invalid input"}"
+// @Success 200 {object} map[string]string
+// @Failure 500 {object} map[string]string
 // @Router /transaction/{transaction_id} [put]
 func CreateTransaction(c *gin.Context) {
 	txnID, _ := strconv.ParseInt(c.Param("transaction_id"), 10, 64)
@@ -39,9 +39,9 @@ func CreateTransaction(c *gin.Context) {
 // @Tags transactions
 // @Accept json
 // @Produce json
-// @Param transaction_id path int true "Transaction ID"
+// @Param transaction_id path int64 true "Transaction ID"
 // @Success 200 {object} models.Transaction
-// @Failure 500 {object} map[string]string "{"error": "Transaction not found"}"
+// @Failure 500 {object} map[string]string
 // @Router /transaction/{transaction_id} [get]
 func GetTransactionByID(c *gin.Context) {
 	txnID, _ := strconv.ParseInt(c.Param("transaction_id"), 10, 64)
@@ -61,7 +61,7 @@ func GetTransactionByID(c *gin.Context) {
 // @Produce json
 // @Param type path string true "Transaction type"
 // @Success 200 {object} []int64
-// @Failure 500 {object} map[string]string "{"error": "Transaction type not found"}"
+// @Failure 500 {object} map[string]string
 // @Router /types/{type} [get]
 func GetAllTransactionsOfType(c *gin.Context) {
 	txnType := c.Param("type")
@@ -71,4 +71,24 @@ func GetAllTransactionsOfType(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, txnIDs)
+}
+
+// GetSumOfTransaction godoc
+// @Summary Get sum of transaction
+// @Description Get sum of transaction by ID
+// @Tags transactions
+// @Accept json
+// @Produce json
+// @Param transaction_id path int64 true "Transaction ID"
+// @Success 200 {object} map[string]float64 
+// @Failure 500 {object} map[string]string
+// @Router /sum/{transaction_id} [get]
+func GetSum(c *gin.Context) {
+	txnID, _ := strconv.ParseInt(c.Param("transaction_id"), 10, 64)
+	sum, err := services.GetSum(txnID)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusInternalServerError, "Error encountered")
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"sum": sum})
 }

@@ -17,3 +17,7 @@ func GetTransactionByID(txnID int64) (models.Transaction, error) {
 func GetAllTransactionsOfType(txnType string) ([]int64, error) {
     return database.DB.GetAllTransactionsOfType(txnType)
 }
+
+func GetSum(txnID int64) (float64, error) {
+    return database.DB.GetSum(txnID)
+}
