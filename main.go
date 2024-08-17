@@ -36,6 +36,7 @@ func main() {
 	{
 		txnService.PUT("/transaction/:transaction_id", controllers.CreateTransaction)
 		txnService.GET("/transaction/:transaction_id", controllers.GetTransactionByID)
+		txnService.GET("/types/:type", controllers.GetAllTransactionsOfType)
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

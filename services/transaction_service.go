@@ -12,3 +12,8 @@ func CreateTransaction(txn models.Transaction, txnID int64) {
 func GetTransactionByID(txnID int64) (models.Transaction, error) {
     return repositories.GetTransactionByID(txnID)
 }
+
+func GetAllTransactionsOfType(txnType string) ([]int64, error) {
+    return repositories.GetAllTransactionsOfType(txnType)
+}
+

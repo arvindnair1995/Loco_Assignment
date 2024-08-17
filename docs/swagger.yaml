@@ -87,6 +87,35 @@ paths:
       summary: Create a transaction
       tags:
       - transactions
+  /types/{type}:
+    get:
+      consumes:
+      - application/json
+      description: Get all transactions of a given type
+      parameters:
+      - description: Transaction type
+        in: path
+        name: type
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: integer
+            type: array
+        "500":
+          description: '{"error": "Transaction type not found"}'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all transactions of a given type
+      tags:
+      - transactions
 securityDefinitions:
   BasicAuth:
     type: basic

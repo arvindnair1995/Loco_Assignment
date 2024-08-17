@@ -52,3 +52,23 @@ func GetTransactionByID(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, txn)
 }
+
+// GetTransactionsOfType godoc
+// @Summary Get all transactions of a given type
+// @Description Get all transactions of a given type
+// @Tags transactions
+// @Accept json
+// @Produce json
+// @Param type path string true "Transaction type"
+// @Success 200 {object} []int64
+// @Failure 500 {object} map[string]string "{"error": "Transaction type not found"}"
+// @Router /types/{type} [get]
+func GetAllTransactionsOfType(c *gin.Context) {
+	txnType := c.Param("type")
+	txnIDs, err := services.GetAllTransactionsOfType(txnType)
+	if err != nil {
+		utils.ErrorResponse(c, http.StatusNotFound, "Transaction type not found")
+		return
+	}
+	c.JSON(http.StatusOK, txnIDs)
+}
