@@ -1,4 +1,14 @@
-basePath: /api/v1
+basePath: /transactionservice
+definitions:
+  models.Transaction:
+    properties:
+      amount:
+        type: number
+      parent_id:
+        type: integer
+      type:
+        type: string
+    type: object
 externalDocs:
   description: OpenAPI
   url: https://swagger.io/resources/open-api/
@@ -15,7 +25,68 @@ info:
   termsOfService: http://swagger.io/terms/
   title: Transaction Service API
   version: "1.0"
-paths: {}
+paths:
+  /transaction/{transaction_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a transaction by ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: transaction_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Transaction'
+        "500":
+          description: '{"error": "Transaction not found"}'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get a transaction
+      tags:
+      - transactions
+    put:
+      consumes:
+      - application/json
+      description: Create a transaction by ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: transaction_id
+        required: true
+        type: integer
+      - description: Transaction Data
+        in: body
+        name: txn
+        required: true
+        schema:
+          $ref: '#/definitions/models.Transaction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"status": "ok"}'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: '{"error": "Invalid input"}'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a transaction
+      tags:
+      - transactions
 securityDefinitions:
   BasicAuth:
     type: basic

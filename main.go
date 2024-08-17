@@ -22,7 +22,7 @@ import (
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
 // @host      localhost:8080
-// @BasePath  /api/v1
+// @BasePath  /transactionservice
 
 // @securityDefinitions.basic  BasicAuth
 
@@ -32,12 +32,10 @@ func main() {
 
     r := gin.Default()
 
-	v1 := r.Group("/api/v1")
+	txnService := r.Group("/transactionservice")
 	{
-		txnService := v1.Group("/transactionservice")
-		{
-			txnService.PUT("/transaction/:transaction_id", controllers.CreateTransaction)
-		}
+		txnService.PUT("/transaction/:transaction_id", controllers.CreateTransaction)
+		txnService.GET("/transaction/:transaction_id", controllers.GetTransactionByID)
 	}
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

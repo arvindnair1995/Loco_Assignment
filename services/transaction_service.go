@@ -5,6 +5,10 @@ import (
 	"LOCO_ASSIGNMENT/repositories"
 )
 
-func CreateTransaction(txn models.Transaction, txnID int64) models.Transaction {
-    return repositories.CreateTransaction(txn, txnID)
+func CreateTransaction(txn models.Transaction, txnID int64) {
+    repositories.CreateTransaction(txn, txnID)
+}
+
+func GetTransactionByID(txnID int64) (models.Transaction, error) {
+    return repositories.GetTransactionByID(txnID)
 }
