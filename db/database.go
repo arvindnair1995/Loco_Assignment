@@ -21,7 +21,8 @@ var DB = &InMemoryDB{
 
 func (db *InMemoryDB) Create(txn models.Transaction, txnID int64) {
     db.store[txnID] = txn
-    db.typeMap[utils.TransformString(txn.Type)] = append(db.typeMap[txn.Type], txnID)
+    txn.Type = utils.TransformString(txn.Type)
+    db.typeMap[txn.Type] = append(db.typeMap[txn.Type], txnID)
     if txn.ParentID != nil {
         db.graph[*txn.ParentID] = append(db.graph[*txn.ParentID], txnID)
     }
