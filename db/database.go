@@ -12,7 +12,7 @@ type InMemoryDB struct {
     store map[int64]models.Transaction
     typeMap map[string][]int64
     graph map[int64][]int64
-    mu sync.RWMutex
+    mu sync.Mutex
 }
 
 var DB = &InMemoryDB{
@@ -25,7 +25,7 @@ var DB = &InMemoryDB{
 func (db *InMemoryDB) Create(txn models.Transaction, txnID int64) {
     db.mu.Lock()
     defer db.mu.Unlock()
-    
+
     db.store[txnID] = txn
     txn.Type = utils.TransformString(txn.Type)
     db.typeMap[txn.Type] = append(db.typeMap[txn.Type], txnID)
@@ -36,6 +36,9 @@ func (db *InMemoryDB) Create(txn models.Transaction, txnID int64) {
 
 // TC: O(1)
 func (db *InMemoryDB) GetByID(txnID int64) (models.Transaction, error) {
+    db.mu.Lock()
+    defer db.mu.Unlock()
+
     txn, exists := db.store[txnID]
     if !exists {
         return models.Transaction{}, errors.New("transaction not found")
@@ -45,6 +48,9 @@ func (db *InMemoryDB) GetByID(txnID int64) (models.Transaction, error) {
 
 // TC: O(1)
 func (db *InMemoryDB) GetAllTransactionsOfType(txnType string) ([]int64, error) {
+    db.mu.Lock()
+    defer db.mu.Unlock()
+
     txnIDs, exists := db.typeMap[txnType]
     if !exists {
         return nil, errors.New("transaction type not found")
@@ -55,6 +61,9 @@ func (db *InMemoryDB) GetAllTransactionsOfType(txnType string) ([]int64, error) 
 // TC: O(n)
 // BFS to compute sum
 func (db *InMemoryDB) GetSum(txnID int64) (float64, error) {
+    db.mu.Lock()
+    defer db.mu.Unlock()
+    
     _, exists := db.store[txnID]
     if !exists {
         return 0.0, errors.New("transaction not found")
