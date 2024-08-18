@@ -1,6 +1,6 @@
 # Loco Backend Assignment
 
-Go + Gin + Swagger project involving CRUD APIs for a transaction service. All the transactions are stored in a custom in-memory database. This DB has 3 data structures - 
+Go + Gin + Swagger project involving CRUD APIs for a transaction service. All the transactions are stored in a custom, thread-safe in-memory database. This DB has 3 data structures - 
 1. `Store `- For storing txnID to txn mapping
 2. `TypeMap` - For storing txnType to txn mapping
 3. `Graph` - For storing dependencies between various transactions
