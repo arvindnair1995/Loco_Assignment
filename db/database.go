@@ -5,12 +5,14 @@ import (
 	"LOCO_ASSIGNMENT/utils"
 	"container/list"
 	"errors"
+	"sync"
 )
 
 type InMemoryDB struct {
     store map[int64]models.Transaction
     typeMap map[string][]int64
     graph map[int64][]int64
+    mu sync.RWMutex
 }
 
 var DB = &InMemoryDB{
@@ -21,6 +23,9 @@ var DB = &InMemoryDB{
 
 // TC: O(1)
 func (db *InMemoryDB) Create(txn models.Transaction, txnID int64) {
+    db.mu.Lock()
+    defer db.mu.Unlock()
+    
     db.store[txnID] = txn
     txn.Type = utils.TransformString(txn.Type)
     db.typeMap[txn.Type] = append(db.typeMap[txn.Type], txnID)
