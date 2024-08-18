@@ -8,8 +8,9 @@ Go + Gin + Swagger project involving CRUD APIs for a transaction service. All th
 ## Setup
 1. Git clone the project
 2. Do `go mod download` to install all the dependencies
-3. Open [Swagger UI](http://localhost:8080/swagger/index.html#/) on your browser
-4. Voila! You are already to use the transaction service
+3. Run `go run main.go` in the terminal
+4. Open [Swagger UI](http://localhost:8080/swagger/index.html#/) on your browser
+5. Voila! You are already to use the transaction service
 
 ## APIs
 1. `PUT /transactionservice/transaction/{transaction_id}` - Inserts a transaction into the DB with TC: O(1)
