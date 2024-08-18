@@ -19,6 +19,7 @@ var DB = &InMemoryDB{
     graph: make(map[int64][]int64),
 }
 
+// TC: O(1)
 func (db *InMemoryDB) Create(txn models.Transaction, txnID int64) {
     db.store[txnID] = txn
     txn.Type = utils.TransformString(txn.Type)
@@ -28,6 +29,7 @@ func (db *InMemoryDB) Create(txn models.Transaction, txnID int64) {
     }
 }
 
+// TC: O(1)
 func (db *InMemoryDB) GetByID(txnID int64) (models.Transaction, error) {
     txn, exists := db.store[txnID]
     if !exists {
@@ -36,6 +38,7 @@ func (db *InMemoryDB) GetByID(txnID int64) (models.Transaction, error) {
     return txn, nil
 }
 
+// TC: O(1)
 func (db *InMemoryDB) GetAllTransactionsOfType(txnType string) ([]int64, error) {
     txnIDs, exists := db.typeMap[txnType]
     if !exists {
@@ -44,25 +47,36 @@ func (db *InMemoryDB) GetAllTransactionsOfType(txnType string) ([]int64, error) 
     return txnIDs, nil
 }
 
-// TC: O(n), SC: O(n)
+// TC: O(n)
 // BFS to compute sum
 func (db *InMemoryDB) GetSum(txnID int64) (float64, error) {
+    _, exists := db.store[txnID]
+    if !exists {
+        return 0.0, errors.New("transaction not found")
+    }
+    
+    visited := make(map[int64]bool)
     queue := list.New()
+
     queue.PushBack(txnID)
+    visited[txnID] = true
 
     sum := 0.0
 
     for queue.Len() > 0 {
-        element := queue.Front()
-        current := element.Value.(int64)
-        queue.Remove(element)
+        ele := queue.Front()
+        curr := ele.Value.(int64)
+        queue.Remove(ele)
 
-        sum += db.store[current].Amount
+        sum += db.store[curr].Amount
 
-        neighbors, exists := db.graph[current]
+        children, exists := db.graph[curr]
         if exists {
-            for _, neighbor := range neighbors {
-                queue.PushBack(neighbor)
+            for _, child := range children {
+                if !visited[child] {
+                    queue.PushBack(child)
+                    visited[child] = true
+                }
             }
         }
     }

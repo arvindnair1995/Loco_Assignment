@@ -47,7 +47,7 @@ func GetTransactionByID(c *gin.Context) {
 	txnID, _ := strconv.ParseInt(c.Param("transaction_id"), 10, 64)
 	txn, err := services.GetTransactionByID(txnID)
 	if err != nil {
-		utils.ErrorResponse(c, http.StatusNotFound, "Transaction not found")
+		utils.ErrorResponse(c, http.StatusNotFound, err.Error())
 		return
 	}
 	c.JSON(http.StatusOK, txn)
@@ -67,7 +67,7 @@ func GetAllTransactionsOfType(c *gin.Context) {
 	txnType := c.Param("type")
 	txnIDs, err := services.GetAllTransactionsOfType(txnType)
 	if err != nil {
-		utils.ErrorResponse(c, http.StatusNotFound, "Transaction type not found")
+		utils.ErrorResponse(c, http.StatusNotFound, err.Error())
 		return
 	}
 	c.JSON(http.StatusOK, txnIDs)
@@ -87,7 +87,7 @@ func GetSum(c *gin.Context) {
 	txnID, _ := strconv.ParseInt(c.Param("transaction_id"), 10, 64)
 	sum, err := services.GetSum(txnID)
 	if err != nil {
-		utils.ErrorResponse(c, http.StatusInternalServerError, "Error encountered")
+		utils.ErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"sum": sum})
