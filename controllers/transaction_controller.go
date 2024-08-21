@@ -30,10 +30,10 @@ func CreateTransaction(c *gin.Context) {
 	}
 
 	if err := services.CreateTransaction(txn, txnID); err != nil {
-		utils.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		utils.ErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	
+
 	c.JSON(http.StatusCreated, gin.H{"status": "ok"})
 }
 
