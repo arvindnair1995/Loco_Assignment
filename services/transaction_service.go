@@ -6,8 +6,8 @@ import (
 	"LOCO_ASSIGNMENT/utils"
 )
 
-func CreateTransaction(txn models.Transaction, txnID int64) {
-    repositories.CreateTransaction(txn, txnID)
+func CreateTransaction(txn models.Transaction, txnID int64) error {
+    return repositories.CreateTransaction(txn, txnID)
 }
 
 func GetTransactionByID(txnID int64) (models.Transaction, error) {

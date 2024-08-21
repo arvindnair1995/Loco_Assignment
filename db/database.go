@@ -22,9 +22,13 @@ var DB = &InMemoryDB{
 }
 
 // TC: O(1)
-func (db *InMemoryDB) Create(txn models.Transaction, txnID int64) {
+func (db *InMemoryDB) Create(txn models.Transaction, txnID int64) error {
     db.mu.Lock()
     defer db.mu.Unlock()
+
+    if _, ok := db.store[txnID]; ok {
+        return errors.New("duplicate transaction")
+    }
 
     db.store[txnID] = txn
     txn.Type = utils.TransformString(txn.Type)
@@ -32,6 +36,8 @@ func (db *InMemoryDB) Create(txn models.Transaction, txnID int64) {
     if txn.ParentID != nil {
         db.graph[*txn.ParentID] = append(db.graph[*txn.ParentID], txnID)
     }
+
+    return nil
 }
 
 // TC: O(1)
